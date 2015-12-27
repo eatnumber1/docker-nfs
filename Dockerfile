@@ -2,8 +2,8 @@ FROM fedora:23
 MAINTAINER Russ Harmon <eatnumber1@gmail.com>
 
 # Install prerequisites.
-RUN yum -y install nfs-utils fuse python-setuptools
-RUN yum clean all
+RUN dnf -y install nfs-utils python-setuptools procps-ng
+RUN dnf clean all
 
 # Install supervisord
 RUN easy_install -O2 supervisor supervisor-stdout

@@ -53,7 +53,7 @@ while getopts :b:i:n:c:m:f:o:h opt; do
 done
 shift $((OPTIND-1))
 
-if [[ $# -ne 1 ]]; then
+if [[ $# -ne 0 ]]; then
 	usage >&2
 	exit 1
 fi

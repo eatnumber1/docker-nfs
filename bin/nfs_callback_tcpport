@@ -3,22 +3,22 @@ set -e
 #set -x
 
 if [[ $# -ne 1 ]]; then
-       echo "Usage: $0 port" >&2
-       exit 1
+	echo "Usage: $0 port" >&2
+	exit 1
 fi
 port=$1
 
 function unbind_ports {
-       if [[ -f /proc/sys/fs/nfs/nfs_callback_tcpport ]]; then
-               /sbin/sysctl -w fs.nfs.nfs_callback_tcpport=0
-       fi
+	if [[ -f /proc/sys/fs/nfs/nfs_callback_tcpport ]]; then
+		/sbin/sysctl -w fs.nfs.nfs_callback_tcpport=0
+	fi
 }
 trap unbind_ports EXIT
 
 if [[ -f /proc/sys/fs/nfs/nfs_callback_tcpport ]]; then
-       /sbin/sysctl -w fs.nfs.nfs_callback_tcpport=$port
+	/sbin/sysctl -w fs.nfs.nfs_callback_tcpport=$port
 fi
 
 while true; do
-       sleep 1d
+	sleep 1d
 done
