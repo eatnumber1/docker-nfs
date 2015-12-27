@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+#set -x
+
+function stop_nfsd {
+	/usr/sbin/rpc.nfsd 0
+}
+trap stop_nfsd EXIT
+
+/usr/sbin/rpc.nfsd "$@"
+
+while true; do
+	sleep 1d
+done

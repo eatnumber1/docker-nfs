@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+#set -x
+
+function unexportfs {
+	/usr/sbin/exportfs -f
+}
+trap unexportfs EXIT
+
+/usr/sbin/exportfs -r
+
+while true; do
+	sleep 1d
+done

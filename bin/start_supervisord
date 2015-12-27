@@ -1,0 +1,61 @@
+#!/bin/bash
+set -e
+#set -x
+
+export RPCBIND_ARGS=""
+export RPC_IDMAPD_ARGS=""
+export RPC_NFSD_ARGS=""
+export RPC_NFSD_SERVER_COUNT="8"
+export RPC_MOUNTD_ARGS=""
+export NFS_CALLBACK_TCPPORT="1066"
+export RPC_MOUNTD_PORT="1067"
+
+function usage {
+	echo "Usage: $0 [options]"
+	echo "Export a directory it over NFSv4"
+	echo
+	echo -e "  -b\tArguments to rpcbind(8)"
+	echo -e "  -c\tThe number of NFS server threads. Default 8. See rpc.nfsd(8)"
+	echo -e "  -h\tThis help message"
+	echo -e "  -i\tArguments to rpc.idmapd(8)"
+	echo -e "  -n\tArguments to rpc.nfsd(8)"
+	echo -e "  -m\tArguments to rpc.mountd(8)"
+	echo -e "  -f\tPort number for NFSv4 callbacks. Default: 1066"
+	echo -e "  -o\tPort number for rpc.mountd(8). Default: 1067"
+}
+
+while getopts :b:i:n:c:m:f:o:h opt; do
+	case "$opt" in
+		b) RPCBIND_ARGS="$OPTARG";;
+		i) RPC_IDMAPD_ARGS="$OPTARG";;
+		n) RPC_NFSD_ARGS="$OPTARG";;
+		c) RPC_NFSD_SERVER_COUNT="$OPTARG";;
+		m) RPC_MOUNTD_ARGS="$OPTARG";;
+		f) NFS_CALLBACK_TCPPORT="$OPTARG";;
+		o) RPC_MOUNTD_PORT="$OPTARG";;
+		h)
+			usage
+			exit 0
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG" >&2
+			exit 1
+			;;
+		:)
+			echo "Option -$OPTARG requires an argument." >&2
+			exit 1
+			;;
+		*)
+			echo "?? unhandled option -$OPTARG ??" >&2
+			exit 1
+			;;
+	esac
+done
+shift $((OPTIND-1))
+
+if [[ $# -ne 1 ]]; then
+	usage >&2
+	exit 1
+fi
+
+exec /usr/bin/supervisord --config /etc/supervisord.conf

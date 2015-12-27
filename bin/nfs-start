@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+#set -x
+
+supervisorctl start nfs-mounts
+supervisorctl start rpcbind
+supervisorctl start nfs-callback-port
+supervisorctl start exportfs
+supervisorctl start rpc.nfsd
+supervisorctl start rpc.idmapd
+supervisorctl start rpc.mountd

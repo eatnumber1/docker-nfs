@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+#set -x
+
+function unmount_all {
+	umount /proc/fs/nfsd
+	umount /var/lib/nfs/rpc_pipefs
+}
+trap unmount_all EXIT
+
+mount -t nfsd nfds /proc/fs/nfsd
+mount -t rpc_pipefs sunrpc /var/lib/nfs/rpc_pipefs
+
+while true; do
+	sleep 1d
+done
