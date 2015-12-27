@@ -1,16 +1,24 @@
-#!/bin/bash
-set -e
-#set -x
+#!/bin/zsh
+emulate -L zsh
+setopt err_exit warn_create_global no_unset
+#setopt xtrace
+fpath+=( /opt/bin )
 
 function unmount_all {
 	umount /proc/fs/nfsd
 	umount /var/lib/nfs/rpc_pipefs
 }
+
+autoload -Uz doubletrap
 trap unmount_all EXIT
+doubletrap unmount_all INT HUP TERM
 
 mount -t nfsd nfds /proc/fs/nfsd
 mount -t rpc_pipefs sunrpc /var/lib/nfs/rpc_pipefs
 
+declare -i one_day_ms=8640000
+
+zmodload zsh/zselect
 while true; do
-	sleep 1d
+	zselect -t $one_day_ms
 done

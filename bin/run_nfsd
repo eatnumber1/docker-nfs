@@ -1,14 +1,22 @@
-#!/bin/bash
-set -e
-#set -x
+#!/bin/zsh
+emulate -L zsh
+setopt err_exit warn_create_global no_unset
+#setopt xtrace
+fpath+=( /opt/bin )
 
 function stop_nfsd {
 	/usr/sbin/rpc.nfsd 0
 }
+
+autoload -Uz doubletrap
 trap stop_nfsd EXIT
+doubletrap stop_nfsd INT HUP TERM
 
 /usr/sbin/rpc.nfsd "$@"
 
+declare -i one_day_ms=8640000
+
+zmodload zsh/zselect
 while true; do
-	sleep 1d
+	zselect -t $one_day_ms
 done

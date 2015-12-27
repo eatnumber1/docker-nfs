@@ -1,6 +1,8 @@
-#!/bin/bash
-set -e
-#set -x
+#!/bin/zsh
+emulate -L zsh
+setopt err_exit warn_create_global no_unset
+#setopt xtrace
+fpath+=( /opt/bin )
 
 if [[ $# -ne 1 ]]; then
 	echo "Usage: $0 port" >&2
@@ -13,12 +15,18 @@ function unbind_ports {
 		/sbin/sysctl -w fs.nfs.nfs_callback_tcpport=0
 	fi
 }
+
+autoload -Uz doubletrap
 trap unbind_ports EXIT
+doubletrap unbind_ports INT HUP TERM
 
 if [[ -f /proc/sys/fs/nfs/nfs_callback_tcpport ]]; then
 	/sbin/sysctl -w fs.nfs.nfs_callback_tcpport=$port
 fi
 
+declare -i one_day_ms=8640000
+
+zmodload zsh/zselect
 while true; do
-	sleep 1d
+	zselect -t $one_day_ms
 done

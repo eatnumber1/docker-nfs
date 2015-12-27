@@ -11,8 +11,8 @@ export NFS_CALLBACK_TCPPORT="1066"
 export RPC_MOUNTD_PORT="1067"
 
 function usage {
-	echo "Usage: $0 [options]"
-	echo "Export a directory it over NFSv4"
+	echo "Usage: docker run --privileged -v <dir_to_export>:/export eatnumber1/nfs [options]"
+	echo "Export a directory over NFSv4"
 	echo
 	echo -e "  -b\tArguments to rpcbind(8)"
 	echo -e "  -c\tThe number of NFS server threads. Default 8. See rpc.nfsd(8)"
@@ -22,6 +22,15 @@ function usage {
 	echo -e "  -m\tArguments to rpc.mountd(8)"
 	echo -e "  -f\tPort number for NFSv4 callbacks. Default: 1066"
 	echo -e "  -o\tPort number for rpc.mountd(8). Default: 1067"
+	echo
+	echo -e "The following ports must be forwarded in order to expose the NFS server:"
+	echo -e "\t2049:2049/tcp"
+	echo -e "\t2049:2049/udp"
+	echo -e "\t111:111/tcp"
+	echo -e "\t111:111/udp"
+	echo -e "\t1066:1066/tcp"
+	echo -e "\t1067:1067/tcp"
+	echo -e "\t1067:1067/udp"
 }
 
 while getopts :b:i:n:c:m:f:o:h opt; do

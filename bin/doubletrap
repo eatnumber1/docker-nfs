@@ -1,0 +1,17 @@
+#!/bin/zsh
+
+function doubletrap {
+	setopt local_options no_local_traps
+	local arg=$1
+	local sig
+	shift
+	for sig in "$@"; do
+		trap "
+			$arg || :
+			trap - $sig
+			kill -$sig $$
+		" $sig
+	done
+}
+
+doubletrap "$@"

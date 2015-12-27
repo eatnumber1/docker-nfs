@@ -1,14 +1,22 @@
-#!/bin/bash
-set -e
-#set -x
+#!/bin/zsh
+emulate -L zsh
+setopt err_exit warn_create_global no_unset
+#setopt xtrace
+fpath+=( /opt/bin )
 
 function unexportfs {
 	/usr/sbin/exportfs -f
 }
+
+autoload -Uz doubletrap
 trap unexportfs EXIT
+doubletrap unexportfs INT HUP TERM
 
 /usr/sbin/exportfs -r
 
+declare -i one_day_ms=8640000
+
+zmodload zsh/zselect
 while true; do
-	sleep 1d
+	zselect -t $one_day_ms
 done

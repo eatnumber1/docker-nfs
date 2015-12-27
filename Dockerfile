@@ -2,7 +2,7 @@ FROM fedora:23
 MAINTAINER Russ Harmon <eatnumber1@gmail.com>
 
 # Install prerequisites.
-RUN dnf -y install nfs-utils python-setuptools procps-ng
+RUN dnf -y install nfs-utils python-setuptools procps-ng zsh
 RUN dnf clean all
 
 # Install supervisord
