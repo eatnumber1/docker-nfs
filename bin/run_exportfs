@@ -5,6 +5,7 @@ setopt err_exit warn_create_global no_unset
 fpath+=( /opt/bin )
 
 function unexportfs {
+	/usr/sbin/exportfs -au
 	/usr/sbin/exportfs -f
 }
 
